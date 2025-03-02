@@ -1,26 +1,36 @@
 import axios from "axios"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { addConnection } from "../utils/connectionSlice"
+import { BASE_URL } from "../utils/constents"
 
 const Connections = () => {
     const dispatch = useDispatch()
     const connections = useSelector(store => store.connection)
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState(null)
 
     const fetchConnection = async () => {
+        setLoading(true);
+        setError(null);
         try {
-            const res = await axios.get("http://localhost:7777/user/connections", { withCredentials: true })
+            const res = await axios.get(`${BASE_URL}/user/connections`, { withCredentials: true })
 
             dispatch(addConnection(res.data.data))
-        } catch (error) {
-            console.log(error)
+        } catch (err) {
+            console.error("Error fetching connections:", err);
+            setError("Failed to fetch connections. Please try again later.");
+
+        } finally {
+            setLoading(false); // Set loading to false
         }
     }
     useEffect(() => {
         fetchConnection()
     }, [])
-    if (!connections) return
-    if (connections.length === 0) return <h1 className="text-2xl text-center text-gray-300">No connections found</h1>
+    if (loading) return <p className="text-center text-2xl font-bold text-gray-200">Loading connections...</p>;
+    if (error) return <p className="text-red-500 text-center">{error}</p>;
+    if (!connections || connections.length === 0) return <h1 className="text-2xl text-center text-gray-300">No connections found</h1>
     return (
         <>
             <p className="text-2xl text-center text-orange-600 font-bold my-4 underline underline-offset-1">Your Connections</p>

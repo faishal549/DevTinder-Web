@@ -2,33 +2,41 @@ import axios from "axios"
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { addRequest, removeRequest } from "../utils/requestSlice"
+import { BASE_URL } from "../utils/constents"
 
 const Requests = () => {
     const dispatch = useDispatch()
     const request = useSelector(store => store.request)
-    const [error, setError] = useState("")
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     const fetchRequest = async () => {
+        setLoading(true);
+        setError(null);
         try {
-            const res = await axios.get("http://localhost:7777/user/request/received", { withCredentials: true })
+            const res = await axios.get(`${BASE_URL}/user/request/received`, { withCredentials: true })
 
             dispatch(addRequest(res.data.data))
         } catch (error) {
-            console.log(error)
-
+            console.error("Error fetching requests:", error);
+            setError("Failed to fetch requests. Please try again later.");
+        } finally {
+            setLoading(false);
         }
     }
 
-    const reviewRequest = async (status, _id) => {
+    const reviewRequest = async (status, requestId) => {
+        setError(null)
         try {
-            const res = await axios.post("http://localhost:7777/request/review/" + status + "/" + _id, {}, { withCredentials: true })
+            const res = await axios.post(`${BASE_URL}/request/review/${status}/${requestId}`, {}, { withCredentials: true })
 
-            if (res.status === 200) {
-                dispatch(removeRequest(_id))
-            }
 
-        } catch (error) {
-            console.log(error)
+            dispatch(removeRequest(requestId))
+
+
+        } catch (err) {
+            console.error("Error reviewing request:", err);
+            setError("Failed to review request. Please try again.");
 
         }
     }
@@ -36,7 +44,9 @@ const Requests = () => {
     useEffect(() => {
         fetchRequest()
     }, [])
-    if (!request) return
+    if (loading) return <p className="text-center text-2xl font-bold text-gray-200">Loading requests...</p>;
+    if (error) return <p className="text-red-500 text-center">{error}</p>;
+    if (!request) return null
     if (request.length === 0) return <h1 className="text-2xl text-center text-gray-300">No request found</h1>
     return (
         <>
@@ -67,8 +77,8 @@ const Requests = () => {
 
 
 
-                                    <button className="btn btn-outline btn-accent  my-2" onClick={() => reviewRequest("accepted", _id)}>Accept</button>
-                                    <button className="btn btn-outline btn-primary" onClick={() => reviewRequest("rejected", _id)}>Reject</button>
+                                    <button className="btn btn-outline btn-accent  my-2" onClick={() => reviewRequest("accepted", user._id)}>Accept</button>
+                                    <button className="btn btn-outline btn-primary" onClick={() => reviewRequest("rejected", user._id)}>Reject</button>
                                 </div>
                             </div>
                             {/* <p className="text-red-500">{error}</p> */}

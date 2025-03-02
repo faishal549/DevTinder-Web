@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import FeedCard from "./FeedCard";
 import axios from "axios";
 import { addUser } from "../utils/userSlice";
+import { BASE_URL } from "../utils/constents";
 
 const EditProfile = ({ user }) => {
     const userFromStore = useSelector((state) => state.user);
@@ -23,9 +24,9 @@ const EditProfile = ({ user }) => {
         if (user) {
             setFirstName(user.firstName);
             setLastName(user.lastName);
-            setAge(user.age);
+            setAge(user.age || "");
             setGender(user.gender);
-            setPhotoUrl(user.photoUrl);
+            setPhotoUrl(user.photoUrl || "");
             setSkills(user.skills);
             setAbout(user.about);
         }
@@ -39,7 +40,7 @@ const EditProfile = ({ user }) => {
         setError("")
         try {
 
-            const res = await axios.patch("http://localhost:7777/profile/edit", {
+            const res = await axios.patch(`${BASE_URL}/profile/edit`, {
                 firstName, lastName, age, gender, about, skills, photoUrl
             }, { withCredentials: true })
 
@@ -49,9 +50,15 @@ const EditProfile = ({ user }) => {
             setTimeout(() => {
                 setShowToast(false)
             }, 3000)
-        } catch (error) {
-            console.log(error)
-            setError(error)
+        } catch (err) {
+            console.error(err);
+            if (err.response && err.response.data && err.response.data.message) {
+                setError(err.response.data.message); // Extract message from response
+            } else if (err.message) {
+                setError(err.message); // Use general error message
+            } else {
+                setError("An error occurred. Please try again.");
+            }
         }
 
     }
