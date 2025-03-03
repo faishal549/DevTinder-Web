@@ -13,7 +13,7 @@ const EditProfile = ({ user }) => {
     const [age, setAge] = useState(userFromStore?.age || "");
     const [gender, setGender] = useState(userFromStore?.gender || "");
     const [photoUrl, setPhotoUrl] = useState(userFromStore?.photoUrl || "");
-    const [skills, setSkills] = useState(userFromStore?.skills || "");
+    const [skills, setSkills] = useState(userFromStore?.skills.join(", ") || "");
     const [about, setAbout] = useState(userFromStore?.about || "");
     const [showToast, setShowToast] = useState(false);
     const [error, setError] = useState("");
@@ -39,9 +39,10 @@ const EditProfile = ({ user }) => {
     const updateProfile = async () => {
         setError("")
         try {
+            const skillsArray = skills.split(",").map((skill) => skill.trim()).filter(skill => skill);
 
             const res = await axios.patch(`${BASE_URL}/profile/edit`, {
-                firstName, lastName, age, gender, about, skills, photoUrl
+                firstName, lastName, age, gender, about, skills: skillsArray, photoUrl
             }, { withCredentials: true })
 
 
