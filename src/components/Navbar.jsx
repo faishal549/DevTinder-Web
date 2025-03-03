@@ -26,6 +26,11 @@ const Navbar = () => {
                     <a className="btn btn-soft text-xl text-orange-300">DevTinder</a>
                 </div>
 
+                {!user && <Link to="/login"> <button className="btn bg-[#FF9900] text-black border-[#e17d00]">
+                    Login
+                </button>
+                </Link>}
+
                 {user && <div className="flex gap-2">
                     <p className="text-orange-300"> Welcome {user.firstName}</p>
 

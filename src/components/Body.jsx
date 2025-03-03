@@ -1,4 +1,4 @@
-import { Outlet, useNavigate } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import axios from "axios";
@@ -20,7 +20,7 @@ const Body = () => {
             dispatch(addUser(res?.data?.data))
         } catch (error) {
             console.error(error)
-            navigate("/login")
+            navigate("/")
         }
     }
 
@@ -29,8 +29,11 @@ const Body = () => {
     }, [])
     return (
         <>
-            <Navbar />
-            <Outlet />
+            <div>
+                <Navbar />
+                <Outlet />
+            </div>
+
 
         </>
     )
