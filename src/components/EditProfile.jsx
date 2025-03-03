@@ -54,9 +54,9 @@ const EditProfile = ({ user }) => {
         } catch (err) {
             console.error(err);
             if (err.response && err.response.data && err.response.data.message) {
-                setError(err.response.data.message); // Extract message from response
+                setError(err.response.data.message)
             } else if (err.message) {
-                setError(err.message); // Use general error message
+                setError(err.message)
             } else {
                 setError("An error occurred. Please try again.");
             }

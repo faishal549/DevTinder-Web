@@ -22,7 +22,7 @@ const Connections = () => {
             setError("Failed to fetch connections. Please try again later.");
 
         } finally {
-            setLoading(false); // Set loading to false
+            setLoading(false)
         }
     }
     useEffect(() => {
