@@ -7,7 +7,7 @@ const Profile = () => {
 
     return (
         <>
-            <div className="flex justify-around mt-2">
+            <div className="grid md:flex justify-around mt-2">
                 <EditProfile user={user} />
             </div>
 

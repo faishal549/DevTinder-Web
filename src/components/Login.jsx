@@ -51,17 +51,18 @@ const Login = () => {
 
 
         } catch (error) {
-            console.log(error)
-            setError()
+
+            setError(error?.response?.data?.message || "something went wrong")
+
         }
     }
     //** error part pending here */
     return (
         <>
-            <div className="flex items-center justify-center mt-10 bg-base-100">
+            <div className="grid md:flex items-center justify-center mt-10 bg-base-100">
                 <div className="flex flex-col px-10 ">
-                    <h1 className="text-center text-4xl font-bold text-orange-500 underline underline-offset-2 ">Find your dev tribe on DevTinder.</h1>
-                    <p className="py-2 text-xl text-orange-300">Connect. Code. Collaborate.</p>
+                    <h1 className="md:text-center text-sm md:text-4xl font-bold text-orange-500 underline underline-offset-2 ">Find your dev tribe on DevTinder.</h1>
+                    <p className="py-2 text-xs md:text-xl text-orange-300">Connect. Code. Collaborate.</p>
 
                 </div>
                 <div className="bg-base-300 p-8 rounded-lg shadow-md w-96">
@@ -150,4 +151,4 @@ const Login = () => {
     )
 }
 
-export default Login
+export default Login 
